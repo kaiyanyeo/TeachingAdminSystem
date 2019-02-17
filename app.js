@@ -4,10 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
-var http = require('http');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var studentsRouter = require('./routes/students');
+var teachersRouter = require('./routes/teachers');
+var apiRouter = require('./routes/api');
 
 var app = express();
 
@@ -35,12 +36,14 @@ app.use(function(req, res, next){
 			return;
 		}
 		console.log("Connected!");
-	  });
+	});
 	next();
 });
 
 app.use('/', indexRouter);
-app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/students', studentsRouter);
+app.use('/api/v1/teachers', teachersRouter);
+app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
