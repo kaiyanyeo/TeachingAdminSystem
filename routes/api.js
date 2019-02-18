@@ -22,7 +22,7 @@ router.post('/register', function(req, res, next) {
 		if(error) {
 			res.send(JSON.stringify({"status": 500, "error": error}));
 		} else {
-			res.send(JSON.stringify({"status": 204, "error": null, "response": results}));
+			res.status(204).send();
 		}
 	})
 });
@@ -45,7 +45,7 @@ router.get('/commonstudents', function(req, res, next) {
 		if(error)
 			res.send(JSON.stringify({"status": 500, "error": error}));
 		else {
-			res.send(JSON.stringify({"status": 200, "error": null, "students": students}));
+			res.status(200).send(JSON.stringify({"students": students}));
 		}
 	})
 });
@@ -62,7 +62,7 @@ router.post('/suspend', function(req, res, next) {
 		if(error)
 			res.send(JSON.stringify({"status": 500, "error": error}));
 		else 
-			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+			res.status(204).send();
 	})
 });
 
@@ -94,7 +94,7 @@ router.post('/retrievefornotifications', function(req, res, next) {
 		if(error)
 			res.send(JSON.stringify({"status": 500, "error": error}));
 		else 
-			res.send(JSON.stringify({"status": 200, "error": null, "recipients": recipients}));
+			res.status(200).send(JSON.stringify({"recipients": recipients}));
 	})
 });
 
