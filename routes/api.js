@@ -66,4 +66,36 @@ router.post('/suspend', function(req, res, next) {
 	})
 });
 
+/* POST notification to students and
+ * retrieve a list of students who can receive the notification.
+ *
+ */
+router.post('/retrievefornotifications', function(req, res, next) {
+	var teacher = req.body.teacher;
+	const emailRegex = /@\S+@\S+/g;
+	var mentions = req.body.notification.match(emailRegex);
+	var students = [''];
+
+	if(mentions != null) {
+		mentions.forEach((mention, index) => {
+			students.push(mention.substring(1));
+		})
+	}
+
+	var retrieveNotifSql = 'SELECT semail FROM Registers WHERE temail = ? UNION ' +
+		'SELECT semail FROM Students WHERE semail IN ? AND suspended=\'N\'';
+
+	connection.query(retrieveNotifSql, [teacher, [students]], function(error, results, fields) {
+		// formatting the output
+		var recipients = [];
+		results.forEach((item, index) => {
+			recipients.push(item.semail);
+		})
+		if(error)
+			res.send(JSON.stringify({"status": 500, "error": error}));
+		else 
+			res.send(JSON.stringify({"status": 200, "error": null, "recipients": recipients}));
+	})
+});
+
 module.exports = router;
