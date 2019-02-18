@@ -6,27 +6,29 @@ var router = express.Router();
  */
 router.post('/register', function(req, res, next) {
 	var insertTeacherSql = 'INSERT IGNORE INTO Teachers (temail) VALUES (?)';
-	var insertStudentSql = 'INSERT IGNORE INTO Students (semail) VALUES (?);';
-	var insertRegisterSql = 'INSERT IGNORE INTO Registers (temail, semail) VALUES (?,?)';
+	var insertStudentSql = 'INSERT IGNORE INTO Students (semail) VALUES ?';
+	var insertRegisterSql = 'INSERT IGNORE INTO Registers (temail, semail) VALUES ?';
 	var registerPairs = [];
 
 	var semail = req.body.students;
-	var temail = req.body.teacher;
+	var students = [];
+	var temail = req.body.teacher;	// should be one teacher
 	for(var i=0; i<semail.length; i++) {
-		registerPairs.push(temail, semail[i]);
+		students.push([semail[i]]);
+		registerPairs.push([temail, semail[i]]);
 	}
 
 	connection.query(insertTeacherSql, temail, function(error, results, fields) {
 		if(error)
-			res.send(JSON.stringify({"status": 500}));
+			res.send(JSON.stringify({"status": 500, "error": error}));
 	}),
-	connection.query(insertStudentSql, semail, function(error, results, fields) {
+	connection.query(insertStudentSql, [students], function(error, results, fields) {
 		if(error)
-			res.send(JSON.stringify({"status": 500}));
+			res.send(JSON.stringify({"status": 500, "error": error}));
 	}),
-	connection.query(insertRegisterSql, registerPairs, function(error, results, fields) {
+	connection.query(insertRegisterSql, [registerPairs], function(error, results, fields) {
 		if(error) {
-			res.send(JSON.stringify({"status": 500}));
+			res.send(JSON.stringify({"status": 500, "error": error}));
 		} else {
 			res.send(JSON.stringify({"status": 204, "error": null, "response": results}));
 		}
