@@ -28,7 +28,8 @@ app.use(function(req, res, next){
 		host     : 'localhost',
 		user     : 'foo',
 		password : 'bar',
-		database : 'teacheradminsystem'
+		database : 'teacheradminsystem',
+		multipleStatements: true
 	});
 	connection.connect(function(err) {
 		if (err) {

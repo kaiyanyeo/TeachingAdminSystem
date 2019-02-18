@@ -56,4 +56,20 @@ router.get('/commonstudents', function(req, res, next) {
 	})
 });
 
+/* POST a suspension.
+ * A teacher suspends a specified student.
+ */
+router.post('/suspend', function(req, res, next) {
+	var student = req.body.student;
+	var suspendSql = 'UPDATE Students SET suspended=\'Y\' WHERE semail=(?);' +
+		'DELETE FROM Registers WHERE semail=(?);';
+
+	connection.query(suspendSql, [student, student], function(error, results, fields) {
+		if(error)
+			res.send(JSON.stringify({"status": 500, "error": error}));
+		else 
+			res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+	})
+});
+
 module.exports = router;
