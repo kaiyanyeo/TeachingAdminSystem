@@ -6,8 +6,6 @@ var logger = require('morgan');
 var mysql = require('mysql');
 
 var indexRouter = require('./routes/index');
-var studentsRouter = require('./routes/students');
-var teachersRouter = require('./routes/teachers');
 var apiRouter = require('./routes/api');
 
 var app = express();
@@ -42,8 +40,6 @@ app.use(function(req, res, next){
 });
 
 app.use('/', indexRouter);
-app.use('/api/v1/students', studentsRouter);
-app.use('/api/v1/teachers', teachersRouter);
 app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler

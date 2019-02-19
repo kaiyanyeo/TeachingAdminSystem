@@ -21,7 +21,7 @@ router.post('/register', function(req, res, next) {
 	// filter out students who have been suspended
 	connection.query(registerSql, [temail, students, temail, [students]], function(error, results) {
 		if(error) {
-			res.send(JSON.stringify({"status": 500, "error": error}));
+			res.status(500).send(JSON.stringify({"message": "Error registering teacher and students. Please verify the teacher and student email inputs."}));
 		} else {
 			students = results;
 			res.status(204).send();
@@ -45,7 +45,7 @@ router.get('/commonstudents', function(req, res, next) {
 		})
 
 		if(error)
-			res.send(JSON.stringify({"status": 500, "error": error}));
+			res.status(500).send(JSON.stringify({"message": "Error retrieving data. Please verify the input values."}));
 		else {
 			res.status(200).send(JSON.stringify({"students": students}));
 		}
@@ -62,7 +62,7 @@ router.post('/suspend', function(req, res, next) {
 
 	connection.query(suspendSql, [student, student], function(error, results, fields) {
 		if(error)
-			res.send(JSON.stringify({"status": 500, "error": error}));
+			res.status(500).send(JSON.stringify({"message": "Error recording suspension. Please verify student has been registered before."}));
 		else 
 			res.status(204).send();
 	})
@@ -94,7 +94,7 @@ router.post('/retrievefornotifications', function(req, res, next) {
 			recipients.push(item.semail);
 		})
 		if(error)
-			res.send(JSON.stringify({"status": 500, "error": error}));
+			res.status(500).send(JSON.stringify({"message": "Error retrieving students. Please verify notification body text."}));
 		else 
 			res.status(200).send(JSON.stringify({"recipients": recipients}));
 	})
