@@ -7,21 +7,23 @@ var router = express.Router();
 router.post('/register', function(req, res, next) {
 	var registerSql = 'INSERT IGNORE INTO Teachers (temail) VALUES (?); ' +
 			'INSERT IGNORE INTO Students (semail) VALUES ?; ' +
-			'INSERT IGNORE INTO Registers (temail, semail) VALUES ?';
-	var registerPairs = [];
+			'INSERT IGNORE INTO Registers (temail, semail) SELECT temail,semail FROM (SELECT * FROM Teachers) as A INNER JOIN (SELECT * FROM Students) as B on A.temail=? and B.semail in ? and B.suspended=\'N\'';
 
 	var semail = req.body.students;
-	var students = [];
 	var temail = req.body.teacher;	// should be one teacher
-	for(var i=0; i<semail.length; i++) {
-		students.push([semail[i]]);
-		registerPairs.push([temail, semail[i]]);
-	}
+	var students = [];
 
-	connection.query(registerSql, [temail, students, registerPairs], function(error, results, fields) {
+	// formatting to use in sql query
+	semail.forEach((item, index) => {
+		students.push([item]);
+	})
+
+	// filter out students who have been suspended
+	connection.query(registerSql, [temail, students, temail, [students]], function(error, results) {
 		if(error) {
 			res.send(JSON.stringify({"status": 500, "error": error}));
 		} else {
+			students = results;
 			res.status(204).send();
 		}
 	})
