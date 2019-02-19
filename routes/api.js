@@ -1,6 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
+var registerErrorMsg = "Error registering teacher and students. Please verify the teacher and student email inputs.";
+var commonStudentsErrorMsg = "Error retrieving data. Please verify the input values.";
+var suspendErrorMsg = "Error recording suspension. Please verify student has been registered before.";
+var retrieveNotifErrorMsg = "Error retrieving students. Please verify notification body text.";
+
 /* POST a registration.
  * A teacher registers one or more students to a specified teacher.
  */
@@ -21,7 +26,7 @@ router.post('/register', function(req, res, next) {
 	// filter out students who have been suspended
 	connection.query(registerSql, [temail, students, temail, [students]], function(error, results) {
 		if(error) {
-			res.status(500).send(JSON.stringify({"message": "Error registering teacher and students. Please verify the teacher and student email inputs."}));
+			res.status(500).send(JSON.stringify({"message": registerErrorMsg}));
 		} else {
 			students = results;
 			res.status(204).send();
@@ -45,7 +50,7 @@ router.get('/commonstudents', function(req, res, next) {
 		})
 
 		if(error)
-			res.status(500).send(JSON.stringify({"message": "Error retrieving data. Please verify the input values."}));
+			res.status(500).send(JSON.stringify({"message": commonStudentsErrorMsg}));
 		else {
 			res.status(200).send(JSON.stringify({"students": students}));
 		}
@@ -62,7 +67,7 @@ router.post('/suspend', function(req, res, next) {
 
 	connection.query(suspendSql, [student, student], function(error, results, fields) {
 		if(error)
-			res.status(500).send(JSON.stringify({"message": "Error recording suspension. Please verify student has been registered before."}));
+			res.status(500).send(JSON.stringify({"message": suspendErrorMsg}));
 		else 
 			res.status(204).send();
 	})
@@ -94,7 +99,7 @@ router.post('/retrievefornotifications', function(req, res, next) {
 			recipients.push(item.semail);
 		})
 		if(error)
-			res.status(500).send(JSON.stringify({"message": "Error retrieving students. Please verify notification body text."}));
+			res.status(500).send(JSON.stringify({"message": retrieveNotifErrorMsg}));
 		else 
 			res.status(200).send(JSON.stringify({"recipients": recipients}));
 	})
