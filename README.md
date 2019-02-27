@@ -3,6 +3,7 @@
 * This system is set up using ExpressJS, referencing [this tutorial](https://medium.com/@avanthikameenakshi/building-restful-api-with-nodejs-and-mysql-in-10-min-ff740043d4be) to build example APIs,
 and [express-generator](https://expressjs.com/en/starter/generator.html) to set up a directory with ExpressJS.
 * MySQL is used as the database.
+* This system was built as part of my foray into learning SQL, so most practices in this repository may not be reflective of security demands or usual development practices.
 
 # Setting up the system locally
 ## Setting up MySQL
